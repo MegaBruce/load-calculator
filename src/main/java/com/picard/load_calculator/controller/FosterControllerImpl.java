@@ -5,6 +5,7 @@ import com.picard.load_calculator.helper.DateHelper;
 import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Foster;
 import com.picard.load_calculator.model.Period;
+import com.picard.load_calculator.model.TrainningState;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -71,5 +72,33 @@ public class FosterControllerImpl implements FosterController {
         while (!DateHelper.areDatesEqual(dateIterator, dateLimit));
 
         return loadArray;
+    }
+
+    public TrainningState calculateTrainningState(Foster foster){
+        if (
+            foster.getMonotony() > 2.5 ||
+            foster.getStrain() > 10000 ||
+            foster.getAcwr() > 1.5
+        ){
+            return TrainningState.INJURY;
+        }
+        if (
+                (foster.getMonotony() > 2 &&
+                        foster.getMonotony() < 2.5 )
+                        ||
+                        (foster.getStrain() > 6000 &&
+                                foster.getStrain() < 10000)
+        ) {
+            return TrainningState.TIRED;
+        }
+        if (
+                foster.getMonotony() < 2 &&
+                        foster.getStrain() < 6000 &&
+                        foster.getAcwr() > 0.8 &&
+                        foster.getAcwr() < 1.3
+        ) {
+            return TrainningState.OPTIMAL;
+        }
+        return TrainningState.RAS;
     }
 }

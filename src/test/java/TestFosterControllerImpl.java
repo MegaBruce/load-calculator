@@ -5,6 +5,7 @@ import com.picard.load_calculator.helper.DateHelper;
 import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Foster;
 import com.picard.load_calculator.model.Period;
+import com.picard.load_calculator.model.TrainningState;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -396,7 +397,6 @@ public class TestFosterControllerImpl {
     }
 
     @Test
-    @Disabled
     @DisplayName("Should return Trainning State")
     public void forAGivenDate_ShouldReturnTrainningState() {
         List<Integer> arr = new ArrayList<>(Arrays.asList(135, 480, 0, 495, 525, 630, 600));
@@ -429,5 +429,38 @@ public class TestFosterControllerImpl {
         int strain = (int) (totalWeekLoad*monotony);
         assertThat(fosterState.getStrain()).isEqualTo(strain);
         assertThat(fosterState.getFitness()).isEqualTo((int)totalWeekLoad-strain);
+    }
+
+    @Test
+    @DisplayName("Should return an Optimal trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnOptimalTrainningState(){
+        Foster foster = new Foster(2778,1.8,5000,-2222,0.95);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.OPTIMAL);
+    }
+
+    @Test
+    @DisplayName("Should return a RAS trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnRASTrainningState(){
+        Foster foster = new Foster(2778,1.8,5000,-2222,1.4);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.RAS);
+        assertThat(result).isNotEqualTo(TrainningState.OPTIMAL);
+    }
+
+    @Test
+    @DisplayName("Should return a TIRED trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnTiredTrainningState(){
+        Foster foster = new Foster(4200,2.2,9240,-5040,1.5);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.TIRED);
+    }
+
+    @Test
+    @DisplayName("Should return an INJURY trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnInjuryTrainningState(){
+        Foster foster = new Foster(4200,2.2,9240,-5040,1.8);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.INJURY);
     }
 }
