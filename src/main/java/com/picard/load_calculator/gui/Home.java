@@ -20,14 +20,16 @@ public class Home extends JFrame {
         setTitle(getClass().getSimpleName());
         setSize(800, 600);
 
+        Container cp = this.getContentPane();
         JPanel panelTrainningState = new JPanel();
         panelTrainningState.setBackground(Color.green);
 
         ActivityForm activityForm = new ActivityForm(activityController);
         TrainningStateBanner trainningStateBanner = new TrainningStateBanner();
 
-        add(trainningStateBanner.getRootPane(), BorderLayout.NORTH);
-        add(activityForm.getRootPanel(), BorderLayout.CENTER);
+        cp.add(trainningStateBanner.getRootPane(), BorderLayout.NORTH);
+        cp.add(activityForm.getRootPanel(), BorderLayout.CENTER);
+        cp.revalidate();
     }
 
     @Override
