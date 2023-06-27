@@ -7,20 +7,20 @@ import java.awt.*;
 
 public class ActivityFormDialog extends JDialog {
     public ActivityFormDialog (
-                Frame owner,
-                ActivityController activityController
+            Frame owner,
+            ActivityController activityController
     ) {
         super(owner);
-        setPreferredSize(new Dimension(600, 400));
         setTitle(getClass().getSimpleName());
-
+        setPreferredSize(new Dimension(400, 300));
         pack();
         setLocationRelativeTo(getParent());
 
         Container cp = this.getContentPane();
-        JPanel activityForm = new ActivityForm(activityController).getRootPanel();
+        JPanel activityForm = new ActivityForm(this, activityController).getRootPanel();
 
         cp.add(activityForm);
+        cp.revalidate();
     }
 
     @Override

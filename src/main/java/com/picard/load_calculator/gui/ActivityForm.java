@@ -8,8 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,14 +33,17 @@ public class ActivityForm {
     private JFormattedTextField fieldDate;
 
     private ActivityController activityController;
+    private Window owner;
 
     public ActivityForm(
+            Window owner,
             ActivityController activityController
     ) {
         this.activityController = activityController;
+        this.owner = owner;
         saveButton.addActionListener(new SaveActivityButtonListener());
+        cancelButton.addActionListener(new CancelButtonListener());
         fieldRpe.addChangeListener(new RpeChangeListener());
-
     }
 
     private void createUIComponents() {
@@ -67,10 +72,19 @@ public class ActivityForm {
                         date
                 );
                 activityController.save(activity);
+                owner.dispose();
             }
             catch (Exception exception) {
                 JOptionPane.showMessageDialog(null, "Invalid data");
             }
+        }
+    }
+
+    class CancelButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            log.info("Quit without saving");
+            owner.dispose();
         }
     }
 
