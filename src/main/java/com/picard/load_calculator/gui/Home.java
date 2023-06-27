@@ -23,30 +23,11 @@ public class Home extends JFrame {
         JPanel panelTrainningState = new JPanel();
         panelTrainningState.setBackground(Color.green);
 
-        add(panelTrainningState);
+        ActivityForm activityForm = new ActivityForm(activityController);
+        TrainningStateBanner trainningStateBanner = new TrainningStateBanner();
 
-
-        /*
-        JButton addActivityButton = new JButton("Ajouter une activité");
-        addActivityButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                log.info("Hello");
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActivityFormDialog dialog = new ActivityFormDialog(Home.this, activityController);
-                        dialog.setModal(true);
-                        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    }
-                });
-            }
-        });
-
-        add(addActivityButton, BorderLayout.PAGE_START);
-
-         */
-
+        add(trainningStateBanner.getRootPane(), BorderLayout.NORTH);
+        add(activityForm.getRootPanel(), BorderLayout.CENTER);
     }
 
     @Override

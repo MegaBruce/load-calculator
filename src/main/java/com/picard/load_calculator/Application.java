@@ -7,8 +7,6 @@ import com.picard.load_calculator.repository.ActivityRepository;
 import com.picard.load_calculator.repository.ActivityRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-
 @Slf4j
 public class Application {
 
