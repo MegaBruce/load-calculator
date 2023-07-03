@@ -26,6 +26,12 @@ public class ActivityControllerImpl implements ActivityController {
 
     @Override
     public List<Activity> findActivitiesByPeriod(Period period) {
+        Document query = new Document().append()
         return null;
+    }
+
+    @Override
+    public List<Activity> getAllActivities() {
+        return this.activityRepository.getAll();
     }
 }

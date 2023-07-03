@@ -11,4 +11,5 @@ public interface ActivityController {
 
     ObjectId save(Activity activity);
     List<Activity> findActivitiesByPeriod(Period period);
+    List<Activity> getAllActivities();
 }

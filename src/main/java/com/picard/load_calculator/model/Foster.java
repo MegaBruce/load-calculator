@@ -13,4 +13,5 @@ public class Foster {
     private int strain;
     private int fitness;
     private double acwr;
+    private TrainningState trainningState;
 }
