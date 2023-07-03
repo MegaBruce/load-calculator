@@ -8,9 +8,11 @@ import com.picard.load_calculator.model.Period;
 import com.picard.load_calculator.model.TrainningState;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Slf4j
 public class FosterControllerImpl implements FosterController {
@@ -20,16 +22,17 @@ public class FosterControllerImpl implements FosterController {
         this.activityController = activityController;
     }
     @Override
-    public Foster getTrainningState(Date date) {
-        Foster foster = new Foster();
+    public Foster getTrainningState(LocalDate date) {
+        Foster foster = new Foster(2778, 1.8, 5000, -2222, 0.95);
         List<Activity> activitiesForThisWeek;
         List<Activity> activitiesForPast4Weeks;
         Period weekPeriod = DateHelper.getWeekPeriod(date);
+        Period fourWeekPeriod = DateHelper.get4WeeksPeriod(date);
         
         activitiesForThisWeek = this.activityController
                 .findActivitiesByPeriod(weekPeriod);
         activitiesForPast4Weeks = this.activityController
-                .findActivitiesByPeriod(DateHelper.get4WeeksPeriod(date));
+                .findActivitiesByPeriod(fourWeekPeriod);
 
         double totalWeekLoad = activitiesForThisWeek
                 .stream()
@@ -57,20 +60,19 @@ public class FosterControllerImpl implements FosterController {
 
     private static List<Integer> getLoadArrayForAPeriod(List<Activity> activitiesForThisWeek, Period weekPeriod) {
         List<Integer> loadArray = new ArrayList<>();
-        Date dateIterator = (Date) weekPeriod.getStartDate().clone();
-        Date dateLimit = (Date) weekPeriod.getEndDate().clone();
-        dateLimit.setDate(dateLimit.getDate() + 1);
-        int i = 0;
-        do {
+
+        for (
+                LocalDate date = weekPeriod.getStartDate();
+                date.isBefore(weekPeriod.getEndDate().plusDays(1));
+                date = date.plusDays(1)
+        ) {
+            LocalDate finalDate = date;
             int dayLoad = activitiesForThisWeek.stream()
-                    .filter(activity -> DateHelper.areDatesEqual(activity.getDate(), dateIterator))
+                    .filter(activity -> DateHelper.areDatesEqual(activity.getDate(), finalDate))
                     .map(activity -> activity.getLoad())
                     .reduce(0, (a,b) -> a+b);
             loadArray.add(dayLoad | 0);
-            dateIterator.setDate(dateIterator.getDate() + 1);
         }
-        while (!DateHelper.areDatesEqual(dateIterator, dateLimit));
-
         return loadArray;
     }
 

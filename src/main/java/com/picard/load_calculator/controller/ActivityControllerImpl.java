@@ -26,7 +26,7 @@ public class ActivityControllerImpl implements ActivityController {
 
     @Override
     public List<Activity> findActivitiesByPeriod(Period period) {
-        Document query = new Document().append()
+        // Document query = new Document().append()
         return null;
     }
 

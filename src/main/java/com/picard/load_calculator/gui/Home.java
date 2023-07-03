@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Home extends JFrame {
         JPanel panelTrainningState = new JPanel();
         panelTrainningState.setBackground(Color.green);
 
-        TrainningStateBanner trainningStateBanner = new TrainningStateBanner(fosterController.getTrainningState(new Date()));
+        TrainningStateBanner trainningStateBanner = new TrainningStateBanner(fosterController.getTrainningState(LocalDate.now()));
         cp.add(trainningStateBanner.getRootPane(), BorderLayout.NORTH);
 
         JTable table = new JTable();
@@ -38,7 +39,7 @@ public class Home extends JFrame {
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         for (Activity activity : activityList){
             String name = activity.getName();
-            Date date = activity.getDate();
+            LocalDate date = activity.getDate();
             int load = activity.getLoad();
             model.addRow(new Object[] { name, date, load });
         }

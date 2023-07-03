@@ -24,7 +24,7 @@ public class ActivityMapper {
                 Integer.parseInt(document.get("duration").toString()),
                 Integer.parseInt(document.get("rpe").toString()),
                 Integer.parseInt(document.get("load").toString()),
-                document.getDate("date"),
+                LocalDate.parse(document.get("date").toString()),
                 document.getObjectId("_id")
         );
         return activity;

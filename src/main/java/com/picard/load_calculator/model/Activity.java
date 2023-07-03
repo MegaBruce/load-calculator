@@ -13,11 +13,11 @@ public class Activity {
     private int duration;
     private int rpe;
     private int load;
-    private Date date;
+    private LocalDate date;
 
 
 
-    public Activity(String name, int duration, int rpe, int load, Date date, ObjectId id) {
+    public Activity(String name, int duration, int rpe, int load, LocalDate date, ObjectId id) {
         this.id = id;
         this.name = name;
         this.duration = duration;
@@ -26,7 +26,7 @@ public class Activity {
         this.date = date;
     }
 
-    public Activity(String name, int duration, int rpe, Date date) {
+    public Activity(String name, int duration, int rpe, LocalDate date) {
         this.name = name;
         this.duration = duration;
         this.rpe = rpe;
@@ -69,11 +69,11 @@ public class Activity {
         this.load = load;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

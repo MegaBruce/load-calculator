@@ -12,10 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.WindowEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Slf4j
 public class ActivityForm {
@@ -31,7 +28,9 @@ public class ActivityForm {
     private JButton cancelButton;
     private JLabel labelName;
     private JLabel rpeReadOnlyValue;
-    private JFormattedTextField fieldDate;
+    private JSpinner fieldDay;
+    private JSpinner fieldMonth;
+    private JSpinner fieldYear;
 
     private ActivityController activityController;
     private Window owner;
@@ -49,11 +48,6 @@ public class ActivityForm {
         });
     }
 
-    private void createUIComponents() {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        fieldDate = new JFormattedTextField(df);
-    }
-
     class SaveActivityButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -61,8 +55,11 @@ public class ActivityForm {
                 String textNameValue = fieldName.getText();
                 int rpe = fieldRpe.getValue();
                 int duration = Integer.parseInt(fieldDuration.getText());
-                Date date = (Date) fieldDate.getValue();
-                date.setHours(date.getHours() + 2);
+                LocalDate date = LocalDate.of(
+                        (Integer) fieldYear.getValue(),
+                        (Integer) fieldMonth.getValue(),
+                        (Integer) fieldDay.getValue()
+                );
 
                 log.info("I want to save an activity called : {}", textNameValue);
                 log.info("With RPE : {}", rpe);

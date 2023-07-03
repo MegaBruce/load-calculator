@@ -31,11 +31,14 @@ public class TrainningStateBanner {
         fitnessField.setText(String.valueOf(foster.getFitness()));
         acwrField.setText(String.valueOf(foster.getAcwr()));
 
+        /*
         switch (foster.getTrainningState()){
             case OPTIMAL -> messageLabel.setText("Entrainement optimal");
             case TIRED -> messageLabel.setText("État de fatigue");
             case INJURY -> messageLabel.setText("Attention ! Risque de blessure");
             case RAS -> messageLabel.setText("RAS");
         }
+
+         */
     }
 }
