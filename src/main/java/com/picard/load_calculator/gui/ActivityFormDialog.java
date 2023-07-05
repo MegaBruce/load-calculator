@@ -6,11 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ActivityFormDialog extends JDialog {
+    private Frame owner;
     public ActivityFormDialog (
             Frame owner,
             ActivityController activityController
     ) {
         super(owner);
+        this.owner = owner;
         setTitle(getClass().getSimpleName());
         setPreferredSize(new Dimension(400, 300));
         pack();

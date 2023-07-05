@@ -5,6 +5,7 @@ import org.bson.Document;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class ActivityMapper {
@@ -24,7 +25,9 @@ public class ActivityMapper {
                 Integer.parseInt(document.get("duration").toString()),
                 Integer.parseInt(document.get("rpe").toString()),
                 Integer.parseInt(document.get("load").toString()),
-                document.getDate("date"),
+                document.getDate("date").toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate(),
                 document.getObjectId("_id")
         );
         return activity;

@@ -5,10 +5,11 @@ import com.picard.load_calculator.helper.DateHelper;
 import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Foster;
 import com.picard.load_calculator.model.Period;
+import com.picard.load_calculator.model.TrainningState;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -19,16 +20,17 @@ public class FosterControllerImpl implements FosterController {
         this.activityController = activityController;
     }
     @Override
-    public Foster getTrainningState(Date date) {
+    public Foster getTrainningState(LocalDate date) {
         Foster foster = new Foster();
         List<Activity> activitiesForThisWeek;
         List<Activity> activitiesForPast4Weeks;
         Period weekPeriod = DateHelper.getWeekPeriod(date);
+        Period fourWeekPeriod = DateHelper.get4WeeksPeriod(date);
         
         activitiesForThisWeek = this.activityController
                 .findActivitiesByPeriod(weekPeriod);
         activitiesForPast4Weeks = this.activityController
-                .findActivitiesByPeriod(DateHelper.get4WeeksPeriod(date));
+                .findActivitiesByPeriod(fourWeekPeriod);
 
         double totalWeekLoad = activitiesForThisWeek
                 .stream()
@@ -56,20 +58,47 @@ public class FosterControllerImpl implements FosterController {
 
     private static List<Integer> getLoadArrayForAPeriod(List<Activity> activitiesForThisWeek, Period weekPeriod) {
         List<Integer> loadArray = new ArrayList<>();
-        Date dateIterator = (Date) weekPeriod.getStartDate().clone();
-        Date dateLimit = (Date) weekPeriod.getEndDate().clone();
-        dateLimit.setDate(dateLimit.getDate() + 1);
-        int i = 0;
-        do {
+
+        for (
+                LocalDate date = weekPeriod.getStartDate();
+                date.isBefore(weekPeriod.getEndDate().plusDays(1));
+                date = date.plusDays(1)
+        ) {
+            LocalDate finalDate = date;
             int dayLoad = activitiesForThisWeek.stream()
-                    .filter(activity -> DateHelper.areDatesEqual(activity.getDate(), dateIterator))
+                    .filter(activity -> DateHelper.areDatesEqual(activity.getDate(), finalDate))
                     .map(activity -> activity.getLoad())
                     .reduce(0, (a,b) -> a+b);
             loadArray.add(dayLoad | 0);
-            dateIterator.setDate(dateIterator.getDate() + 1);
         }
-        while (!DateHelper.areDatesEqual(dateIterator, dateLimit));
-
         return loadArray;
+    }
+
+    public TrainningState calculateTrainningState(Foster foster){
+        if (
+            foster.getMonotony() > 2.5 ||
+            foster.getStrain() > 10000 ||
+            foster.getAcwr() > 1.5
+        ){
+            return TrainningState.INJURY;
+        }
+        if (
+                (foster.getMonotony() > 2 &&
+                        foster.getMonotony() < 2.5 )
+                        ||
+                        (foster.getStrain() > 6000 &&
+                                foster.getStrain() < 10000)
+        ) {
+            return TrainningState.TIRED;
+        }
+        if (
+                foster.getMonotony() < 2 &&
+                        foster.getStrain() < 6000 &&
+                        foster.getAcwr() > 0.8 &&
+                        foster.getAcwr() < 1.3
+        ) {
+            return TrainningState.OPTIMAL;
+        }
+        return TrainningState.RAS;
     }
 }

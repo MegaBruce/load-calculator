@@ -1,15 +1,15 @@
 package com.picard.load_calculator.controller;
 
-import com.mongodb.client.model.Filters;
+import com.picard.load_calculator.helper.DateHelper;
 import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Period;
 import com.picard.load_calculator.repository.ActivityRepository;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.util.Date;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.*;
 
 public class ActivityControllerImpl implements ActivityController {
     private ActivityRepository activityRepository;
@@ -26,6 +26,15 @@ public class ActivityControllerImpl implements ActivityController {
 
     @Override
     public List<Activity> findActivitiesByPeriod(Period period) {
-        return null;
+        Bson query = and(
+                gte("date", period.getStartDate()),
+                lt("date", period.getEndDate())
+        );
+        return this.activityRepository.search(query);
+    }
+
+    @Override
+    public List<Activity> getAllActivities() {
+        return this.activityRepository.getAll();
     }
 }

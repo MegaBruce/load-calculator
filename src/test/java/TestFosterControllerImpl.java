@@ -5,6 +5,7 @@ import com.picard.load_calculator.helper.DateHelper;
 import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Foster;
 import com.picard.load_calculator.model.Period;
+import com.picard.load_calculator.model.TrainningState;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,13 +14,12 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,21 +31,18 @@ public class TestFosterControllerImpl {
     @Mock
     ActivityControllerImpl activityController;
 
-    static Date date = new Date();
-    static Date startFourWeekDate = (Date) date.clone();
-    static Date startOneWeekDate = (Date) date.clone();
+    static LocalDate date = LocalDate.now();
+    static LocalDate startFourWeekDate;
+    static LocalDate startOneWeekDate;
     static double totalWeekLoad;
     static double totalPast4WeeksLoad;
-    static Date endDate = (Date) date.clone();
+    static LocalDate endDate;
 
     @BeforeAll
     public static void setUpBeforeAll(){
         activitiesForOneWeek = new ArrayList<>();
         activitiesForFourWeeks = new ArrayList<>();
-        Date mondayDate4 = new Date();
-        mondayDate4.setYear(2023 - 1900);
-        mondayDate4.setMonth(5);
-        mondayDate4.setDate(12);
+        LocalDate mondayDate4 = LocalDate.of(2023, 6, 12);
         activitiesForOneWeek.add(
                 new Activity(
                         "Footing souple",
@@ -56,9 +53,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date tuesdayDate4 = (Date) mondayDate4.clone();
-        tuesdayDate4.setMonth(5);
-        tuesdayDate4.setDate(13);
+        LocalDate tuesdayDate4 = LocalDate.of(2023, 6, 13);
         activitiesForOneWeek.add(
                 new Activity(
                         "Endurance",
@@ -79,9 +74,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date thursdayDate4 = (Date) mondayDate4.clone();
-        thursdayDate4.setMonth(5);
-        thursdayDate4.setDate(15);
+        LocalDate thursdayDate4 = LocalDate.of(2023, 6, 15);
         activitiesForOneWeek.add(
                 new Activity(
                         "VMA",
@@ -92,9 +85,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date fridayDate4 = (Date) mondayDate4.clone();
-        fridayDate4.setMonth(5);
-        fridayDate4.setDate(16);
+        LocalDate fridayDate4 = LocalDate.of(2023, 6, 16);
         activitiesForOneWeek.add(
                 new Activity(
                         "Allure spécifique",
@@ -105,9 +96,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date saturdayDate4 = (Date) mondayDate4.clone();
-        saturdayDate4.setMonth(5);
-        saturdayDate4.setDate(17);
+        LocalDate saturdayDate4 = LocalDate.of(2023, 6, 17);
         activitiesForOneWeek.add(
                 new Activity(
                         "Sortie Vélo",
@@ -118,9 +107,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date sundayDate4 = (Date) mondayDate4.clone();
-        sundayDate4.setMonth(5);
-        sundayDate4.setDate(18);
+        LocalDate sundayDate4 = LocalDate.of(2023, 6, 18);
         activitiesForOneWeek.add(
                 new Activity(
                         "Sortie Longue",
@@ -132,9 +119,7 @@ public class TestFosterControllerImpl {
                 )
         );
 
-        Date mondayDate3 = (Date) mondayDate4.clone();
-        mondayDate3.setMonth(5);
-        mondayDate3.setDate(5);
+        LocalDate mondayDate3 = LocalDate.of(2023, 6, 6);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Footing de récup'",
@@ -145,9 +130,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date tuesdayDate3 = (Date) mondayDate4.clone();
-        tuesdayDate3.setMonth(5);
-        tuesdayDate3.setDate(6);
+        LocalDate tuesdayDate3 = LocalDate.of(2023, 6, 6);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Natation",
@@ -168,9 +151,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date wednesdayDate3 = (Date) mondayDate4.clone();
-        wednesdayDate3.setMonth(5);
-        wednesdayDate3.setDate(7);
+        LocalDate wednesdayDate3 = LocalDate.of(2023, 6, 7);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Renfo",
@@ -181,9 +162,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date thursdayDate3 = (Date) mondayDate4.clone();
-        thursdayDate3.setMonth(5);
-        thursdayDate3.setDate(8);
+        LocalDate thursdayDate3 = LocalDate.of(2023, 6, 8);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Seuil",
@@ -194,9 +173,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date fridayDate3 = (Date) mondayDate4.clone();
-        fridayDate3.setMonth(5);
-        fridayDate3.setDate(9);
+        LocalDate fridayDate3 = LocalDate.of(2023, 6, 9);
         activitiesForFourWeeks.add(
                 new Activity(
                         "VMA longue",
@@ -207,9 +184,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date sundayDate3 = (Date) mondayDate4.clone();
-        sundayDate3.setMonth(5);
-        sundayDate3.setDate(11);
+        LocalDate sundayDate3 = LocalDate.of(2023, 6, 11);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Sortie Longue",
@@ -222,9 +197,7 @@ public class TestFosterControllerImpl {
         );
 
 
-        Date mondayDate2 = (Date) mondayDate4.clone();
-        mondayDate2.setMonth(4);
-        mondayDate2.setDate(29);
+        LocalDate mondayDate2 = LocalDate.of(2023, 5, 29);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Footing progressif",
@@ -235,9 +208,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date tuesdayDate2 = (Date) mondayDate4.clone();
-        tuesdayDate2.setMonth(4);
-        tuesdayDate2.setDate(30);
+        LocalDate tuesdayDate2 = LocalDate.of(2023, 5, 30);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Renfo'",
@@ -248,9 +219,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date wednesdayDate2 = (Date) mondayDate4.clone();
-        wednesdayDate2.setMonth(4);
-        wednesdayDate2.setDate(31);
+        LocalDate wednesdayDate2 = LocalDate.of(2023, 5, 31);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Allure spé",
@@ -261,9 +230,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date thursdayDate2 = (Date) mondayDate4.clone();
-        thursdayDate2.setMonth(5);
-        thursdayDate2.setDate(1);
+        LocalDate thursdayDate2 = LocalDate.of(2023, 6, 1);
         activitiesForFourWeeks.add(
                 new Activity(
                         "VMA",
@@ -274,9 +241,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date saturdayDate2 = (Date) mondayDate4.clone();
-        saturdayDate2.setMonth(5);
-        saturdayDate2.setDate(3);
+        LocalDate saturdayDate2 = LocalDate.of(2023, 6, 3);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Longue à vélo",
@@ -287,9 +252,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date sundayDate2 = (Date) mondayDate4.clone();
-        sundayDate2.setMonth(5);
-        sundayDate2.setDate(3);
+        LocalDate sundayDate2 = LocalDate.of(2023, 6, 3);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Longue avec accélérations",
@@ -302,9 +265,7 @@ public class TestFosterControllerImpl {
         );
 
 
-        Date tuesdayDate1 = (Date) mondayDate4.clone();
-        tuesdayDate1.setMonth(4);
-        tuesdayDate1.setDate(23);
+        LocalDate tuesdayDate1 = LocalDate.of(2023, 5, 23);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Footing récup",
@@ -325,9 +286,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date thursdayDate1 = (Date) mondayDate4.clone();
-        thursdayDate1.setMonth(4);
-        thursdayDate1.setDate(25);
+        LocalDate thursdayDate1 = LocalDate.of(2023, 5, 25);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Petite VMA",
@@ -338,9 +297,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date fridayDate1 = (Date) mondayDate4.clone();
-        fridayDate1.setMonth(4);
-        fridayDate1.setDate(26);
+        LocalDate fridayDate1 = LocalDate.of(2023, 5, 26);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Petit footing",
@@ -351,9 +308,7 @@ public class TestFosterControllerImpl {
                         new ObjectId()
                 )
         );
-        Date sundayDate1 = (Date) mondayDate4.clone();
-        sundayDate1.setMonth(4);
-        sundayDate1.setDate(28);
+        LocalDate sundayDate1 = LocalDate.of(2023, 5, 28);
         activitiesForFourWeeks.add(
                 new Activity(
                         "Petit vélo",
@@ -365,21 +320,13 @@ public class TestFosterControllerImpl {
                 )
         );
 
-        date.setYear(2023 - 1900);
-        date.setMonth(5);
-        date.setDate(16);
+        date = LocalDate.of(2023, 6, 16);
 
-        startFourWeekDate.setYear(2023 - 1900);
-        startFourWeekDate.setMonth(4);
-        startFourWeekDate.setDate(22);
+        startFourWeekDate = LocalDate.of(2023, 5, 22);
 
-        startOneWeekDate.setYear(2023 - 1900);
-        startOneWeekDate.setMonth(5);
-        startOneWeekDate.setDate(12);
+        startOneWeekDate = LocalDate.of(2023, 6, 12);
 
-        endDate.setYear(2023 - 1900);
-        endDate.setMonth(5);
-        endDate.setDate(18);
+        endDate = LocalDate.of(2023, 6, 18);
         totalWeekLoad = activitiesForOneWeek
                 .stream()
                 .map(a -> a.getLoad())
@@ -396,14 +343,17 @@ public class TestFosterControllerImpl {
     }
 
     @Test
-    @Disabled
     @DisplayName("Should return Trainning State")
     public void forAGivenDate_ShouldReturnTrainningState() {
         List<Integer> arr = new ArrayList<>(Arrays.asList(135, 480, 0, 495, 525, 630, 600));
         int stadardDerivation = 225;
-        when(activityController.findActivitiesByPeriod(new Period(startFourWeekDate, endDate)))
+
+        Period fourWeekPeriod = new Period(startFourWeekDate, endDate);
+        Period oneWeekPeriod = new Period(startOneWeekDate, endDate);
+
+        when(activityController.findActivitiesByPeriod(date))
                 .thenReturn(this.activitiesForFourWeeks);
-        when(activityController.findActivitiesByPeriod(new Period(startOneWeekDate, endDate)))
+        when(activityController.findActivitiesByPeriod(date))
                 .thenReturn(this.activitiesForOneWeek);
 
         try (MockedStatic<DateHelper> utilities = Mockito.mockStatic(DateHelper.class)) {
@@ -429,5 +379,38 @@ public class TestFosterControllerImpl {
         int strain = (int) (totalWeekLoad*monotony);
         assertThat(fosterState.getStrain()).isEqualTo(strain);
         assertThat(fosterState.getFitness()).isEqualTo((int)totalWeekLoad-strain);
+    }
+
+    @Test
+    @DisplayName("Should return an Optimal trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnOptimalTrainningState(){
+        Foster foster = new Foster(2778,1.8,5000,-2222,0.95);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.OPTIMAL);
+    }
+
+    @Test
+    @DisplayName("Should return a RAS trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnRASTrainningState(){
+        Foster foster = new Foster(2778,1.8,5000,-2222,1.4);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.RAS);
+        assertThat(result).isNotEqualTo(TrainningState.OPTIMAL);
+    }
+
+    @Test
+    @DisplayName("Should return a TIRED trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnTiredTrainningState(){
+        Foster foster = new Foster(4200,2.2,9240,-5040,1.5);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.TIRED);
+    }
+
+    @Test
+    @DisplayName("Should return an INJURY trainning State for a foster object")
+    public void givenAFoster_CalculateTrainningState_ShouldReturnInjuryTrainningState(){
+        Foster foster = new Foster(4200,2.2,9240,-5040,1.8);
+        TrainningState result = classUnderTest.calculateTrainningState(foster);
+        assertThat(result).isEqualTo(TrainningState.INJURY);
     }
 }
