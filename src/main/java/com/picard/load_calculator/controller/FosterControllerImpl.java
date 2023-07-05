@@ -12,8 +12,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 @Slf4j
 public class FosterControllerImpl implements FosterController {
     private ActivityController activityController;
@@ -23,7 +21,7 @@ public class FosterControllerImpl implements FosterController {
     }
     @Override
     public Foster getTrainningState(LocalDate date) {
-        Foster foster = new Foster(2778, 1.8, 5000, -2222, 0.95);
+        Foster foster = new Foster();
         List<Activity> activitiesForThisWeek;
         List<Activity> activitiesForPast4Weeks;
         Period weekPeriod = DateHelper.getWeekPeriod(date);

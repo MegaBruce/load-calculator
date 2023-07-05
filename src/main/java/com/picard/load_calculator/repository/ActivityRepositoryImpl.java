@@ -1,5 +1,6 @@
 package com.picard.load_calculator.repository;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
@@ -31,14 +32,14 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     @Override
     public List<Activity> getAll() {
         List<Activity> activities = new ArrayList<>();
-        for (Document document : this.collection.find()) {
+        for (Document document : this.collection.find().sort(new BasicDBObject("date", -1))) {
             activities.add(documentToActivity(document));
         }
         return activities;
     }
 
     @Override
-    public List<Activity> search(Document query) {
+    public List<Activity> search(Bson query) {
         List<Activity> activities = new ArrayList<>();
         for (Document document : this.collection.find(query)) {
             activities.add(documentToActivity(document));

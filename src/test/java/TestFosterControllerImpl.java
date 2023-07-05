@@ -351,9 +351,9 @@ public class TestFosterControllerImpl {
         Period fourWeekPeriod = new Period(startFourWeekDate, endDate);
         Period oneWeekPeriod = new Period(startOneWeekDate, endDate);
 
-        when(activityController.findActivitiesByPeriod(fourWeekPeriod))
+        when(activityController.findActivitiesByPeriod(date))
                 .thenReturn(this.activitiesForFourWeeks);
-        when(activityController.findActivitiesByPeriod(oneWeekPeriod))
+        when(activityController.findActivitiesByPeriod(date))
                 .thenReturn(this.activitiesForOneWeek);
 
         try (MockedStatic<DateHelper> utilities = Mockito.mockStatic(DateHelper.class)) {

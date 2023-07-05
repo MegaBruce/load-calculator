@@ -3,6 +3,7 @@ package com.picard.load_calculator.gui;
 import com.picard.load_calculator.controller.ActivityController;
 import com.picard.load_calculator.controller.FosterController;
 import com.picard.load_calculator.model.Foster;
+import com.picard.load_calculator.model.TrainningState;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -23,7 +24,8 @@ public class TrainningStateBanner {
     private JTextField monotonyField;
 
     public TrainningStateBanner(
-            Foster foster
+            Foster foster,
+            TrainningState trainningState
     ) {
         loadField.setText(String.valueOf(foster.getLoad()));
         monotonyField.setText(String.valueOf(foster.getMonotony()));
@@ -31,14 +33,21 @@ public class TrainningStateBanner {
         fitnessField.setText(String.valueOf(foster.getFitness()));
         acwrField.setText(String.valueOf(foster.getAcwr()));
 
-        /*
-        switch (foster.getTrainningState()){
-            case OPTIMAL -> messageLabel.setText("Entrainement optimal");
-            case TIRED -> messageLabel.setText("État de fatigue");
-            case INJURY -> messageLabel.setText("Attention ! Risque de blessure");
+
+        switch (trainningState){
+            case OPTIMAL -> {
+                messageLabel.setText("Entrainement optimal");
+                rootPane.setBackground(Color.green);
+            }
+            case TIRED -> {
+                messageLabel.setText("État de fatigue");
+                rootPane.setBackground(Color.orange);
+            }
+            case INJURY -> {
+                messageLabel.setText("Attention ! Risque de blessure");
+                rootPane.setBackground(Color.red);
+            }
             case RAS -> messageLabel.setText("RAS");
         }
-
-         */
     }
 }

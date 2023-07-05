@@ -4,7 +4,6 @@ import com.picard.load_calculator.model.Activity;
 import com.picard.load_calculator.model.Period;
 import org.bson.types.ObjectId;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ActivityController {
