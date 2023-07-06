@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class TrainningStateBanner {
     private JLabel strainLabel;
@@ -27,25 +28,26 @@ public class TrainningStateBanner {
             Foster foster,
             TrainningState trainningState
     ) {
+        DecimalFormat f = new DecimalFormat("#0.00");
         loadField.setText(String.valueOf(foster.getLoad()));
-        monotonyField.setText(String.valueOf(foster.getMonotony()));
+        monotonyField.setText(f.format(foster.getMonotony()));
         strainField.setText(String.valueOf(foster.getStrain()));
         fitnessField.setText(String.valueOf(foster.getFitness()));
-        acwrField.setText(String.valueOf(foster.getAcwr()));
+        acwrField.setText(f.format(foster.getAcwr()));
 
 
         switch (trainningState){
             case OPTIMAL -> {
                 messageLabel.setText("Entrainement optimal");
-                rootPane.setBackground(Color.green);
+                rootPane.setBackground(new Color(93, 175, 106));
             }
             case TIRED -> {
                 messageLabel.setText("État de fatigue");
-                rootPane.setBackground(Color.orange);
+                rootPane.setBackground(new Color(175, 142, 93));
             }
             case INJURY -> {
                 messageLabel.setText("Attention ! Risque de blessure");
-                rootPane.setBackground(Color.red);
+                rootPane.setBackground(new Color(164, 70, 70));
             }
             case RAS -> messageLabel.setText("RAS");
         }

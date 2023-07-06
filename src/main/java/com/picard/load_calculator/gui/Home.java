@@ -15,16 +15,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 @Slf4j
 public class Home extends JFrame {
-    private int i = 0;
 
     private Container cp = this.getContentPane();
     private ActivityController activityController;
     private FosterController fosterController;
     private JButton addActivityButton = new JButton("Ajouter une activité");
+    private JButton refreshButton = new JButton("Rafraîchir la liste des activités");
+    private JPanel panelButton = new JPanel(new GridLayout(1,0));
     public Home(
             ActivityController activityController,
             FosterController fosterController
@@ -36,9 +39,16 @@ public class Home extends JFrame {
         setSize(800, 600);
         this.fosterController = fosterController;
         this.activityController = activityController;
-        this.i = 0;
+        panelButton.add(addActivityButton);
+        panelButton.add(refreshButton);
 
         SwingUtilities.invokeLater(updateView);
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(updateView);
+            }
+        });
 
         addActivityButton.addActionListener(new ActionListener() {
             @Override
@@ -53,8 +63,6 @@ public class Home extends JFrame {
                         dialog.addWindowListener(new WindowAdapter() {
                             @Override
                             public void windowClosed(WindowEvent e) {
-                                i++;
-                                cp.removeAll();
                                 SwingUtilities.invokeLater(updateView);
                             }
                         });
@@ -68,6 +76,7 @@ public class Home extends JFrame {
 
         @Override
         public void run() {
+            cp.removeAll();
             Foster foster = fosterController.getTrainningState(LocalDate.now());
             TrainningState trainningState = fosterController.calculateTrainningState(foster);
 
@@ -84,14 +93,19 @@ public class Home extends JFrame {
             for (Activity activity : activityList) {
                 String name = activity.getName();
                 LocalDate date = activity.getDate();
+
                 int load = activity.getLoad();
-                model.addRow(new Object[]{name, date, load});
+                model.addRow(new Object[]{
+                        name,
+                        date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)),
+                        load
+                });
             }
             new GridLayout(3, 4);
             table.setModel(model);
             table.setEnabled(false);
             cp.add(new JScrollPane(table));
-            cp.add(addActivityButton, BorderLayout.SOUTH);
+            cp.add(panelButton, BorderLayout.SOUTH);
             cp.repaint();
             cp.revalidate();
         }
